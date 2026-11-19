@@ -1,23 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
-  <defs>
-    <linearGradient id="fur" x2="0" y2="1" gradientUnits="objectBoundingBox">
-      <stop stop-color="#9e9ca2"/><stop offset=".52" stop-color="#565661"/><stop offset="1" stop-color="#2e3039"/>
-    </linearGradient>
-    <linearGradient id="face" x2="0" y2="1" gradientUnits="objectBoundingBox">
-      <stop stop-color="#665d60"/><stop offset="1" stop-color="#34323a"/>
-    </linearGradient>
-  </defs>
-  <path fill="url(#fur)" stroke="#211e25" stroke-width="5" stroke-linejoin="round" d="M8 112Q8 97 25 85L18 71Q13 60 24 53L26 43Q31 21 48 12Q63 3 80 10Q99 17 104 44L107 52Q119 58 111 73L104 86Q119 96 120 112Q107 124 64 124Q24 124 8 112Z"/>
-  <path fill="#a8a5a8" d="M26 45Q33 19 53 13Q70 7 83 16Q62 13 50 28Q36 31 26 45ZM21 92L40 101L48 117Q22 113 13 108ZM106 93L88 104L80 118Q106 116 115 107Z"/>
-  <path fill="#28262e" d="M25 59Q18 58 20 67Q22 73 28 74ZM103 59Q111 58 109 67Q107 73 101 74Z"/>
-  <path fill="url(#face)" stroke="#2a272e" stroke-width="3" d="M28 54Q33 40 46 36Q54 32 64 40Q75 32 84 36Q97 41 101 54L95 68Q97 85 91 100Q86 116 64 117Q42 116 36 101Q30 86 33 69Z"/>
-  <path fill="#23212a" d="M30 56Q42 43 61 51L64 57L68 51Q86 43 99 56L91 65Q82 69 74 61L64 63L54 61Q42 69 35 63Z"/>
-  <path fill="#8d8080" d="M33 54Q45 44 59 52L56 56Q45 51 35 58ZM95 54Q83 44 69 52L72 56Q83 51 93 58Z"/>
-  <path fill="#d7aa75" d="M39 59Q45 55 52 58Q47 63 39 59ZM89 59Q83 55 76 58Q81 63 89 59Z"/>
-  <circle cx="46" cy="59" r="1.7" fill="#242129"/><circle cx="82" cy="59" r="1.7" fill="#242129"/>
-  <path fill="#797174" d="M42 80Q48 73 56 74L72 74Q81 73 88 81Q92 92 83 101Q75 108 64 108Q51 108 43 101Q35 94 42 80Z"/>
-  <path fill="#38333a" d="M60 62Q64 60 69 63L71 70Q80 73 77 79Q71 84 64 80Q56 84 51 79Q48 74 57 70Z"/>
-  <path fill="#211f27" d="M53 76Q58 73 62 78Q57 80 53 76ZM75 76Q70 73 66 78Q71 80 75 76Z"/>
-  <path fill="none" stroke="#302a32" stroke-width="3.8" stroke-linecap="round" d="M44 93Q54 88 64 92Q76 88 86 93"/>
-  <path fill="none" stroke="#9b8e8f" stroke-width="2.6" stroke-linecap="round" d="M55 99Q64 101 73 99"/>
+  <!-- Bold shapes and a bright badge keep the portrait readable at 24px. -->
+  <circle cx="64" cy="64" r="62" fill="#102334"/>
+  <circle cx="64" cy="64" r="57" fill="#1bc6bc"/>
+  <path fill="#103e50" d="M11 83Q39 103 64 103T117 83A57 57 0 0 1 11 83Z"/>
+  <path fill="#27354a" stroke="#111a29" stroke-width="5" stroke-linejoin="round" d="M19 88Q14 76 16 57Q17 47 25 47Q31 27 46 20L45 12L57 17Q70 10 83 20Q99 29 103 47Q111 47 113 57Q115 76 109 88Q105 112 82 116H46Q23 112 19 88Z"/>
+  <path fill="#a2b4ce" d="M28 54Q31 28 53 22Q67 15 82 25Q54 21 42 39ZM22 60Q26 69 33 73L36 95Q23 88 22 60ZM106 60Q102 69 95 73L92 95Q105 88 106 60Z"/>
+  <path fill="#f3c6a3" stroke="#141c2b" stroke-width="5" stroke-linejoin="round" d="M30 58Q39 43 52 45L64 50L76 45Q89 43 98 58L91 76Q100 90 90 102Q80 114 64 113Q48 114 38 102Q28 90 37 76Z"/>
+  <path fill="#ffe4c5" d="M39 88Q49 78 64 82Q79 78 89 88Q90 104 64 107Q38 104 39 88Z"/>
+  <path fill="none" stroke="#151c2a" stroke-width="6" stroke-linecap="round" d="M38 55Q47 50 57 56M71 56Q81 50 90 55"/>
+  <ellipse cx="47" cy="63" rx="8.5" ry="7" fill="#fff8df"/>
+  <ellipse cx="81" cy="63" rx="8.5" ry="7" fill="#fff8df"/>
+  <circle cx="49" cy="63" r="5" fill="#111a29"/>
+  <circle cx="79" cy="63" r="5" fill="#111a29"/>
+  <path fill="#151c2a" d="M54 73Q58 68 64 71Q70 68 74 73Q83 81 74 83L64 79L54 83Q45 81 54 73Z"/>
+  <path fill="none" stroke="#151c2a" stroke-width="5" stroke-linecap="round" d="M48 92Q61 101 79 92"/>
 </svg>

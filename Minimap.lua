@@ -22,7 +22,7 @@ function MinimapButton:Build()
     b:RegisterForDrag("LeftButton")
     -- The tracking-border art sits off-centre in its own file; at 50x50 from
     -- the button's top-left its ring is centred one pixel above the button's
-    -- centre, so the plate and portrait go there too. The 22px portrait
+    -- centre, so the plate and portrait go there too. The 24px portrait
     -- fits inside the tracking ring and keeps the face legible.
     local bg = b:CreateTexture(nil, "BACKGROUND")
     bg:SetTexture("Interface\\Minimap\\UI-Minimap-Background")
@@ -30,7 +30,7 @@ function MinimapButton:Build()
     bg:SetPoint("CENTER", 0, 1)
     local icon = b:CreateTexture(nil, "ARTWORK")
     icon:SetTexture(ns.MEDIA .. "harambe")
-    icon:SetSize(22, 22)
+    icon:SetSize(24, 24)
     icon:SetPoint("CENTER", 0, 1)
     b.icon = icon
     local border = b:CreateTexture(nil, "OVERLAY")

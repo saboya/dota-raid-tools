@@ -1,7 +1,7 @@
 -- DotaRaid core: saved data, event dispatch, slash commands, API probe.
 local ADDON, ns = ...
 
-ns.VERSION = "0.1.1"
+ns.VERSION = "0.1.2"
 
 -- Keep the DotaRaid marker for version discovery. Dev builds don't announce updates.
 function ns.WireVersion()

@@ -1,4 +1,4 @@
--- DotaRaid minimap button: the gnome on the minimap ring. Left-click opens
+-- DotaRaid minimap button: Harambe on the minimap ring. Left-click opens
 -- DotaRaid, right-click offers Settings / Hide, drag moves it around the
 -- ring. Hidden buttons come back from Settings or /dota minimap. DotaRaid is
 -- also in Blizzard's AddOns menu (AddonCompartmentFunc in the .toc).
@@ -22,15 +22,15 @@ function MinimapButton:Build()
     b:RegisterForDrag("LeftButton")
     -- The tracking-border art sits off-centre in its own file; at 50x50 from
     -- the button's top-left its ring is centred one pixel above the button's
-    -- centre, so the plate and gnome go there too (the standard minimap
-    -- button layout). 18px keeps the gnome's ears inside the ring.
+    -- centre, so the plate and portrait go there too. The 22px portrait
+    -- fits inside the tracking ring and keeps the face legible.
     local bg = b:CreateTexture(nil, "BACKGROUND")
     bg:SetTexture("Interface\\Minimap\\UI-Minimap-Background")
     bg:SetSize(24, 24)
     bg:SetPoint("CENTER", 0, 1)
     local icon = b:CreateTexture(nil, "ARTWORK")
-    icon:SetTexture(ns.MEDIA .. "logo")
-    icon:SetSize(18, 18)
+    icon:SetTexture(ns.MEDIA .. "harambe")
+    icon:SetSize(22, 22)
     icon:SetPoint("CENTER", 0, 1)
     b.icon = icon
     local border = b:CreateTexture(nil, "OVERLAY")

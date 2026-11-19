@@ -178,7 +178,7 @@ function Settings:Build(page)
     who:SetSize(RW, height)
     UI.Card(who)
     self.whoArt = ns.Art and ns.Art.Page("settings", who) -- faint game art (Art.PAGES)
-    local t3 = UI.SectionTitle(who, "Who has Dota raid tools")
+    local t3 = UI.SectionTitle(who, "Who has the addon")
     t3:SetPoint("TOPLEFT", 12, -12)
     who.mine = UI.Text(who, 10)
     who.mine:SetPoint("TOPRIGHT", -12, -13)
@@ -271,11 +271,13 @@ function Settings:Refresh()
             row.name:SetText(Ambiguate(e.name, "short"))
             if cc then row.name:SetTextColor(cc.r, cc.g, cc.b) else row.name:SetTextColor(UI.TEXT[1], UI.TEXT[2], UI.TEXT[3]) end
             row.dot:SetShown(e.online)
-            local old = ns.Version.Compare(e.version, newest) == -1
+            local old = e.dota and ns.Version.Compare(e.version, newest) == -1
             -- an old version is just a quieter colour (UI experiment: "(update)" on
             -- every line was noise); the newest is green
-            row.version:SetText(e.version)
-            if old then row.version:SetTextColor(0.75, 0.52, 0.42) else row.version:SetTextColor(0.4, 0.85, 0.45) end
+            row.version:SetText(e.dota and e.version or ("Pog " .. e.version))
+            if not e.dota then row.version:SetTextColor(0.65, 0.65, 0.65)
+            elseif old then row.version:SetTextColor(0.75, 0.52, 0.42)
+            else row.version:SetTextColor(0.4, 0.85, 0.45) end
             row.seen:SetText(e.online and "online" or (ns.Home and ns.Home.Ago(e.t) or ""))
             row:Show()
         else

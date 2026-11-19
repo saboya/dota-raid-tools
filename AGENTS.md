@@ -1,6 +1,6 @@
 # Working on DotaRaid
 
-DotaRaid is the install folder and addon ID; **Dota raid tools** is the in-game title. This checkout is a source-only WoW addon: Lua files and `Media/` assets loaded directly by the client. There is no build, dependency install, or automated test runner in this checkout. `DotaRaid.toc` declares interface `16001`, the `PogRaidDB` SavedVariables table, and the exact Lua load order. The legacy `PogRaid` comms prefix remains unchanged for compatibility.
+DotaRaid is the install folder and addon ID; **Dota raid tools** is the in-game title. WoW loads the Lua files and `Media/` assets directly, with no compile or dependency install step. `DotaRaid.toc` declares interface `16001`, the `PogRaidDB` SavedVariables table, and the exact Lua load order. The legacy `PogRaid` comms prefix remains unchanged for compatibility.
 
 ## Where to make changes
 
@@ -27,7 +27,7 @@ DotaRaid is the install folder and addon ID; **Dota raid tools** is the in-game 
 - Keep existing saves readable. Add defaults and schema migrations alongside `Core.lua`'s `DB_VERSION` logic as needed, preserving explicit `false` settings. `ns.db.guild` is the active guild's runtime pointer into `ns.db.guilds` once selected and is cleared at logout; do not cache it across guild switches. Use `ns.OnGuildChanged()` for derived state that needs invalidation. Do not treat an unknown guild at login as confirmed unguilded.
 - For replicated collections, follow existing `Sync:Register` definitions and write through `ns.Sync:Write()` rather than mutating `Sync:Store()` in place. Preserve collection codes, field order, revision/author rules, tombstones (`deleted`), and per-collection validation and permissions. The sync store is separate from `ns.db.guild` and can be unavailable outside a guild.
 - Use `ns.Comm.Send` / `ns.Comm.SendChunked` instead of calling the client send API directly. `Comm.lua` handles throttling and lockdown and keeps background guild sync behind interactive traffic. Preserve sender/channel checks and compatibility with older clients when changing the wire format. For plans, consult `Codec.lua` before changing serialized item formats or the numeric color/style indices in `Core.lua`.
-- For a requested release bump, keep `## Version` in `DotaRaid.toc` and `ns.VERSION` in `Core.lua` in sync. Avoid broadcasting work-in-progress changes to a live guild; use an isolated test setup for guild traffic.
+- For a requested release bump, keep `## Version` in `DotaRaid.toc` and `ns.VERSION` in `Core.lua` in sync. GitHub Actions publishes an installable ZIP when a matching `vMAJOR.MINOR.PATCH` tag is pushed; see `README.md` for release and local packaging commands. Avoid broadcasting work-in-progress changes to a live guild; use an isolated test setup for guild traffic.
 
 ## Verification
 

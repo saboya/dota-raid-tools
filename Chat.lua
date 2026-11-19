@@ -165,8 +165,10 @@ end
 function Chat:HasChat(name)
     if not name or name == me() or self.off[name] then return false end
     local saved = ns.db.versions and ns.db.versions[name]
-    local v = ns.Version.dev[name] or ns.Version.seen[name] or (saved and saved.v)
-    local c = v and ns.Version.Compare(v, Chat.MIN_VERSION)
+    local peer = ns.Version.dev[name] or saved
+    if not peer then return false end
+    if peer.dota then return true end
+    local c = ns.Version.Compare(peer.v, Chat.MIN_VERSION)
     return c == 0 or c == 1
 end
 
@@ -982,7 +984,7 @@ function Chat:RefreshPicker()
     if not list[1] then
         picker.empty:SetText(typed and "Nobody online matches that."
             or self:Whispers() and "Nobody else from the guild is online."
-            or "Nobody online has Dota raid tools " .. Chat.MIN_VERSION .. " or newer.")
+            or "Nobody online is running an addon version that supports group chat.")
     end
     picker.hint:SetText(why == "addon" and "A group chat needs the addon on everyone."
         or why == "full" and ("A chat holds %d people at most."):format(Chat.MAX_MEMBERS)

@@ -39,21 +39,28 @@ local function store()
     return ns.db.versions
 end
 
-Version.dev = {}            -- this session: key -> the version a dev build is built on
+Version.dev = {}            -- this session: key -> { v, dota } for dev builds
 
 function Version:Note(sender, version)
-    -- a dev build ("0.16.5-dev") is nobody's newer version and isn't listed,
-    -- but what it can do (group chat) goes by the version it's built on
-    local base = sender and tostring(version or ""):match("^(%d+%.%d+%.%d+)%-dev$")
-    if base then self.dev[ns.Attendance:Key(sender)] = base end
-    if not sender or not parse(version) then return end
+    if not sender or type(version) ~= "string" then return end
+    local base, dev = version:gsub("%-dev$", "")
+    local dota
+    base, dota = base:gsub("%-dota$", "")
+    if not parse(base) then return end
+    dota = dota == 1
     local key = ns.Attendance:Key(sender)
     if key == ns.Sync:Me() then return end
-    self.seen[key] = version
-    store()[key] = { v = version, t = ns.Now() }
-    if Version.Compare(version, ns.VERSION) == 1 and not self.warned then
+    -- Dev builds still advertise capabilities, but aren't listed as releases.
+    if dev == 1 then
+        self.dev[key] = { v = base, dota = dota }
+        return
+    end
+    self.dev[key] = nil
+    self.seen[key] = base
+    store()[key] = { v = base, t = ns.Now(), dota = dota }
+    if dota and Version.Compare(base, ns.VERSION) == 1 and not self.warned then
         self.warned = true
-        ns.Print(("a newer Dota raid tools (%s) is out, you have %s. Update it from CurseForge."):format(version, ns.VERSION))
+        ns.Print(("a newer Dota raid tools (%s) is out, you have %s. Update it from GitHub Releases."):format(base, ns.VERSION))
     end
     if ns.Settings then ns.Settings:Changed() end
 end
@@ -62,23 +69,24 @@ end
 function Version:Newest()
     local best = ns.VERSION
     for _, e in pairs(store()) do
-        if Version.Compare(e.v, best) == 1 then best = e.v end
+        if e.dota and Version.Compare(e.v, best) == 1 then best = e.v end
     end
     return best
 end
 
--- Guildies known to run Pog Raid: { name, version, t, online }.
+-- Guildies known to run either addon: { name, version, dota, t, online }.
 function Version:List()
     local now, out = ns.Now(), {}
     for name, e in pairs(store()) do
         if now - e.t > Version.KEEP then
             store()[name] = nil
         else
-            out[#out + 1] = { name = name, version = e.v, t = e.t, online = ns.Roster.online[name] == true }
+            out[#out + 1] = { name = name, version = e.v, dota = e.dota == true, t = e.t, online = ns.Roster.online[name] == true }
         end
     end
     table.sort(out, function(a, b)
         if a.online ~= b.online then return a.online end
+        if a.dota ~= b.dota then return a.dota end
         local c = Version.Compare(a.version, b.version)
         if c and c ~= 0 then return c == 1 end
         return a.name < b.name

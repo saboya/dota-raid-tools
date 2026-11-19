@@ -1,14 +1,12 @@
 -- PogRaid core: saved data, event dispatch, slash commands, API probe.
 local ADDON, ns = ...
 
-ns.VERSION = "0.20.6"
+ns.VERSION = "0.1.0"
 
--- Running from the project folder, not a packaged release (the packager and
--- tools/package.py delete this block). A dev build tells other addons it is
--- "<version>-dev", which none of them reads as a version, so trying out an
--- unreleased version doesn't tell the guild a newer one is out.
+-- Mark DotaRaid versions on the shared PogRaid channel so legacy addons
+-- don't compare them with their own releases. Dev builds don't announce updates.
 function ns.WireVersion()
-    return ns.DEV and (ns.VERSION .. "-dev") or ns.VERSION
+    return ns.VERSION .. (ns.DEV and "-dota-dev" or "-dota")
 end
 ns.MEDIA = "Interface\\AddOns\\" .. ADDON .. "\\Media\\"
 

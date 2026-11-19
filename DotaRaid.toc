@@ -1,0 +1,46 @@
+## Interface: 16001
+## Title: Dota raid tools
+## Notes: Guild dashboard, message board, group finder, raid rosters, attendance, loot log, LFG and group finder, wishlist, crafting directory, player profiles, raid plans, a kill on sight list, guildies on the world map, and games: Sapper Sweeper, Gem Cutter, Wowdle and ranked duels.
+## Author: Jake McMichael
+## Version: 0.20.6
+## IconTexture: Interface\AddOns\DotaRaid\Media\logo
+## Category: Guild
+## AddonCompartmentFunc: PogRaid_OnAddonCompartmentClick
+## X-Curse-Project-ID: 1712125
+## SavedVariables: PogRaidDB
+
+Core.lua
+Bug.lua
+Codec.lua
+Comm.lua
+UI.lua
+Canvas.lua
+Viewer.lua
+Editor.lua
+Roster.lua
+Attendance.lua
+Loot.lua
+Sync.lua
+Version.lua
+Social.lua
+JoinPopup.lua
+Home.lua
+Gems.lua
+Wowdle.lua
+Lode.lua
+Siege.lua
+Angler.lua
+Games.lua
+Duels.lua
+Crafting.lua
+Profiles.lua
+Wishlist.lua
+Dungeons.lua
+Gear.lua
+Chat.lua
+Kos.lua
+GuildMap.lua
+Art.lua
+Demo.lua
+Settings.lua
+Minimap.lua

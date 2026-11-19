@@ -375,38 +375,6 @@ function Roster:CopyPublished(rec)
     ns.Print("copied to My Rosters: " .. r.name)
 end
 
-local function previewPublished(rec)
-    local r = decodeLayout(rec)
-    if not r then return end
-    local lines = { ("%s (%d) - published by %s"):format(r.name, r.size, rec.author), "" }
-    local function member(name)
-        local mark = r.marks[name]
-        return name .. (mark == "tent" and " (tentative)" or mark == "out" and " (out)" or "")
-    end
-    for g = 1, r.size / 5 do
-        local names = {}
-        for s = 1, 5 do
-            local name = r.groups[g][s]
-            if name then names[#names + 1] = s .. ". " .. member(name) end
-        end
-        lines[#lines + 1] = ("Group %d: %s"):format(g, #names > 0 and table.concat(names, ", ") or "-")
-    end
-    local bench = {}
-    for i, name in ipairs(r.bench) do bench[i] = member(name) end
-    lines[#lines + 1] = "Bench: " .. (#bench > 0 and table.concat(bench, ", ") or "-")
-    local assigned, marked = {}, {}
-    for g = 1, r.size / 5 do
-        for _, name in pairs(r.groups[g]) do assigned[name] = true end
-    end
-    for _, name in ipairs(r.bench) do assigned[name] = true end
-    for name in pairs(r.marks) do
-        if not assigned[name] then marked[#marked + 1] = member(name) end
-    end
-    table.sort(marked)
-    if #marked > 0 then lines[#lines + 1] = "Unassigned: " .. table.concat(marked, ", ") end
-    UI.CopyBox("Published roster", table.concat(lines, "\n"))
-end
-
 function Roster:List()
     local out = {}
     for _, r in pairs(G().rosters) do
@@ -899,6 +867,168 @@ end
 
 local MARK_TEXT = { tent = { "tentative", { 1, 0.82, 0.2 } }, out = { "out", { 0.95, 0.3, 0.3 } } }
 
+local function rosterCard(parent, title, width)
+    local box = CreateFrame("Frame", nil, parent)
+    box:SetWidth(width)
+    UI.Card(box)
+    box.title = UI.SectionTitle(box, title)
+    box.title:SetPoint("TOPLEFT", 8, -6)
+    box.count = UI.Text(box, 10)
+    box.count:SetPoint("TOPRIGHT", -8, -6)
+    box.count:SetTextColor(0.5, 0.5, 0.55)
+    return box
+end
+
+local function rosterSlot(box, col, row, onDown, onUp)
+    local slot = makeRow(box, GROUP_W - 4, onDown, onUp)
+    slot:SetPoint("TOPLEFT", 2 + col * (GROUP_W + GAP), -(GROUP_HEAD + row * SLOT_H))
+    return slot
+end
+
+local function buildGroupCards(parent, x, y, onDown, onUp)
+    local boxes, slots = {}, {}
+    for g = 1, 8 do
+        local col, row = (g - 1) % GROUP_COLS, math.floor((g - 1) / GROUP_COLS)
+        local box = rosterCard(parent, "Group " .. g, GROUP_W)
+        box:SetHeight(GROUP_H)
+        box:SetPoint("TOPLEFT", x + col * (GROUP_W + GAP), -(y + row * (GROUP_H + GAP)))
+        boxes[g], slots[g] = box, {}
+        for s = 1, 5 do
+            local slot = rosterSlot(box, 0, s - 1, onDown, onUp)
+            slot.g, slot.s = g, s
+            -- Recessed bars keep empty slots visible.
+            slot.well = slot:CreateTexture(nil, "BACKGROUND")
+            slot.well:SetPoint("TOPLEFT", 2, -1)
+            slot.well:SetPoint("BOTTOMRIGHT", -2, 1)
+            slot.roleBar:ClearAllPoints()
+            slot.roleBar:SetPoint("TOPLEFT", 2, -1)
+            slot.roleBar:SetPoint("BOTTOMLEFT", 2, 1)
+            slots[g][s] = slot
+        end
+    end
+    return boxes, slots
+end
+
+local function fillRosterSlot(roster, slot, name)
+    local mark = name and MARK_TEXT[roster.marks[name]]
+    Roster:FillRow(slot, name, mark and mark[1], mark and mark[2])
+end
+
+local function refreshGroups(roster, boxes, slots)
+    for g, box in ipairs(boxes) do
+        box:SetShown(g <= roster.size / 5)
+        local n = 0
+        for s, slot in ipairs(slots[g]) do
+            local name = roster.groups[g][s]
+            if name then n = n + 1 end
+            fillRosterSlot(roster, slot, name)
+        end
+        box.count:SetText(n > 0 and (n .. "/5") or "")
+    end
+end
+
+local function fillPreviewCard(box, roster, names, minRows)
+    local rows = math.max(minRows, math.ceil(#names / GROUP_COLS))
+    for i = 1, #names do
+        local slot = box.slots[i]
+        if not slot then
+            slot = rosterSlot(box, (i - 1) % GROUP_COLS, math.floor((i - 1) / GROUP_COLS))
+            box.slots[i] = slot
+        end
+        fillRosterSlot(roster, slot, names[i])
+        slot:Show()
+    end
+    for i = #names + 1, #box.slots do box.slots[i]:Hide() end
+    box.count:SetText(#names > 0 and tostring(#names) or "")
+    local height = GROUP_HEAD + rows * SLOT_H + 4
+    box:SetHeight(height)
+    return height
+end
+
+function Roster:BuildPublishedPreview()
+    local frame = CreateFrame("Frame", "DotaRaidRosterPreview", UIParent)
+    frame:SetSize(RW + 2 * PAD + 24, 520)
+    frame:SetPoint("CENTER")
+    frame:SetFrameStrata("DIALOG")
+    frame:EnableMouse(true)
+    UI.Panel(frame)
+    local close = function() frame:Hide() end
+    local portrait = UI.PortraitFrame(frame, "Published roster", ns.MEDIA .. "logo", close)
+    if portrait then
+        UI.MakeMovable(frame, portrait.strip)
+    else
+        UI.Window(frame)
+        UI.MakeMovable(frame, frame)
+        UI.CloseButton(frame, 26, 26, close):SetPoint("TOPRIGHT", -4, 0)
+    end
+    tinsert(UISpecialFrames, "DotaRaidRosterPreview")
+
+    frame.heading = UI.SectionTitle(frame, "", 14)
+    frame.heading:SetPoint("TOPLEFT", portrait and UI.PORTRAIT_CLEAR or PAD, -12)
+    frame.heading:SetPoint("TOPRIGHT", -34, -12)
+    frame.heading:SetJustifyH("LEFT")
+    frame.heading:SetWordWrap(false)
+    local scroll = CreateFrame("ScrollFrame", nil, frame, "UIPanelScrollFrameTemplate")
+    scroll:SetPoint("TOPLEFT", PAD, -42)
+    scroll:SetPoint("BOTTOMRIGHT", -PAD - 24, PAD + BAR_H + GAP)
+    local body = CreateFrame("Frame", nil, scroll)
+    body:SetSize(RW, 1)
+    scroll:SetScrollChild(body)
+    frame.scroll, frame.body = scroll, body
+    scroll:EnableMouseWheel(true)
+    scroll:SetScript("OnMouseWheel", function(f, delta)
+        f:SetVerticalScroll(clamp(f:GetVerticalScroll() - delta * SLOT_H * 3, 0, f:GetVerticalScrollRange()))
+    end)
+    frame.groupBoxes, frame.slots = buildGroupCards(body, 0, 0)
+    frame.benchBox = rosterCard(body, "Bench", RW)
+    frame.unassigned = rosterCard(body, "Unassigned", RW)
+    frame.benchBox.slots, frame.unassigned.slots = {}, {}
+
+    local copy = UI.Button(frame, "Copy to My Rosters", 148, BAR_H, function()
+        local latest = sharedRecord(frame.guild, frame.recordId)
+        close()
+        if latest then self:CopyPublished(latest) else ns.Print("this published roster is no longer available") end
+    end)
+    copy:SetPoint("BOTTOMRIGHT", -PAD, PAD)
+    frame:Hide()
+    self.preview = frame
+end
+
+function Roster:PreviewPublished(guild, rec)
+    local roster = decodeLayout(rec)
+    if not roster then return end
+    if not self.preview then self:BuildPublishedPreview() end
+    local frame = self.preview
+    frame.guild, frame.recordId = guild, rec.id
+    frame.heading:SetText(("%s (%d) - published by %s"):format(roster.name, roster.size, rec.author))
+    refreshGroups(roster, frame.groupBoxes, frame.slots)
+
+    local assigned, unassigned = {}, {}
+    for _, group in ipairs(roster.groups) do
+        for _, name in pairs(group) do assigned[name] = true end
+    end
+    for _, name in ipairs(roster.bench) do assigned[name] = true end
+    for name in pairs(roster.marks) do
+        if not assigned[name] then unassigned[#unassigned + 1] = name end
+    end
+    table.sort(unassigned)
+
+    local y = math.ceil(roster.size / (5 * GROUP_COLS)) * (GROUP_H + GAP)
+    frame.benchBox:ClearAllPoints()
+    frame.benchBox:SetPoint("TOPLEFT", 0, -y)
+    y = y + fillPreviewCard(frame.benchBox, roster, roster.bench, BENCH_ROWS)
+    frame.unassigned:SetShown(#unassigned > 0)
+    if #unassigned > 0 then
+        y = y + GAP
+        frame.unassigned:ClearAllPoints()
+        frame.unassigned:SetPoint("TOPLEFT", 0, -y)
+        y = y + fillPreviewCard(frame.unassigned, roster, unassigned, 1)
+    end
+    frame.body:SetHeight(y)
+    frame:Show()
+    frame.scroll:SetVerticalScroll(0)
+end
+
 function Roster:Build(page)
     self.page = page
 
@@ -1002,56 +1132,21 @@ function Roster:Build(page)
     end
 
     -- Groups
-    self.groupBoxes, self.slots = {}, {}
-    for g = 1, 8 do
-        local col, rowN = (g - 1) % GROUP_COLS, math.floor((g - 1) / GROUP_COLS)
-        local box = CreateFrame("Frame", nil, page)
-        box:SetSize(GROUP_W, GROUP_H)
-        box:SetPoint("TOPLEFT", RX + col * (GROUP_W + GAP), -(ROW2_Y + rowN * (GROUP_H + GAP)))
-        UI.Card(box)
-        box.title = UI.SectionTitle(box, "Group " .. g)
-        box.title:SetPoint("TOPLEFT", 8, -6)
-        box.count = UI.Text(box, 10)
-        box.count:SetPoint("TOPRIGHT", -8, -6)
-        box.count:SetTextColor(0.5, 0.5, 0.55)
-        self.groupBoxes[g] = box
-        self.slots[g] = {}
-        for s = 1, 5 do
-            local slot = makeRow(box, GROUP_W - 4,
-                function(r, button) self:Press(r, button) end,
-                function(r, button) self:Release(r, button, "slot") end)
-            slot:SetPoint("TOPLEFT", 2, -(GROUP_HEAD + (s - 1) * SLOT_H))
-            slot.g, slot.s = g, s
-            -- every spot shows as a faint recessed bar, so a group reads as
-            -- five places even when empty; the role stripe sits on its edge
-            slot.well = slot:CreateTexture(nil, "BACKGROUND")
-            slot.well:SetPoint("TOPLEFT", 2, -1)
-            slot.well:SetPoint("BOTTOMRIGHT", -2, 1)
-            slot.roleBar:ClearAllPoints()
-            slot.roleBar:SetPoint("TOPLEFT", 2, -1)
-            slot.roleBar:SetPoint("BOTTOMLEFT", 2, 1)
-            self.slots[g][s] = slot
-        end
-    end
+    self.groupBoxes, self.slots = buildGroupCards(page, RX, ROW2_Y,
+        function(r, button) self:Press(r, button) end,
+        function(r, button) self:Release(r, button, "slot") end)
 
     -- Bench: slots line up with the group columns above
-    local bench = CreateFrame("Frame", nil, page)
-    bench:SetSize(RW, BENCH_H)
+    local bench = rosterCard(page, "Bench", RW)
+    bench:SetHeight(BENCH_H)
     bench:SetPoint("TOPLEFT", RX, -BENCH_Y)
-    UI.Card(bench)
-    bench.title = UI.SectionTitle(bench, "Bench")
-    bench.title:SetPoint("TOPLEFT", 8, -6)
-    bench.count = UI.Text(bench, 10)
-    bench.count:SetPoint("TOPRIGHT", -8, -6)
-    bench.count:SetTextColor(0.5, 0.5, 0.55)
     self.benchBox = bench
     self.benchSlots = {}
     for i = 1, BENCH_SLOTS do
         local col, rowN = (i - 1) % GROUP_COLS, math.floor((i - 1) / GROUP_COLS)
-        local slot = makeRow(bench, GROUP_W - 4,
+        local slot = rosterSlot(bench, col, rowN,
             function(r, button) self:Press(r, button) end,
             function(r, button) self:Release(r, button, "bench") end)
-        slot:SetPoint("TOPLEFT", 2 + col * (GROUP_W + GAP), -(GROUP_HEAD + rowN * SLOT_H))
         slot.bench = i
         self.benchSlots[i] = slot
     end
@@ -1297,7 +1392,7 @@ function Roster:ShowPublishedActions(anchor, guild, id, page)
     end
     local e = {
         { text = rec.title, header = true },
-        { text = "Preview groups and bench", func = withRecord(previewPublished) },
+        { text = "Preview groups and bench", func = withRecord(function(latest) self:PreviewPublished(guild, latest) end) },
         { text = "Copy to My Rosters", func = withRecord(function(latest) self:CopyPublished(latest) end) },
     }
     if rec.author == ns.Sync:Me() then
@@ -1323,23 +1418,9 @@ function Roster:Refresh()
     if not self.nameBox:HasFocus() then self.nameBox:SetText(r.name) end
     for size, b in pairs(self.sizeButtons) do b:SetSelected(size == r.size) end
 
-    local groups = self:Groups()
-    for g = 1, 8 do
-        local box = self.groupBoxes[g]
-        box:SetShown(g <= groups)
-        local n = 0
-        for s = 1, 5 do
-            local name = r.groups[g][s]
-            if name then n = n + 1 end
-            local mark = name and MARK_TEXT[r.marks[name]]
-            self:FillRow(self.slots[g][s], name, mark and mark[1], mark and mark[2])
-        end
-        box.count:SetText(n > 0 and (n .. "/5") or "")
-    end
+    refreshGroups(r, self.groupBoxes, self.slots)
     for i, slot in ipairs(self.benchSlots) do
-        local name = r.bench[i]
-        local mark = name and MARK_TEXT[r.marks[name]]
-        self:FillRow(slot, name, mark and mark[1], mark and mark[2])
+        fillRosterSlot(r, slot, r.bench[i])
     end
     local extra = #r.bench - BENCH_SLOTS
     self.benchBox.count:SetText(#r.bench == 0 and "" or (#r.bench .. (extra > 0 and (" (" .. extra .. " not shown)") or "")))
@@ -1413,7 +1494,10 @@ ns.On("GUILD_ROSTER_UPDATE", function()
     if Roster.page and Roster.page:IsVisible() then Roster:Refresh() end
 end)
 ns.On("GROUP_ROSTER_UPDATE", function() Roster:OnGroupChanged() end)
-ns.OnGuildChanged(function() wipe(Roster.online) end)
+ns.OnGuildChanged(function()
+    wipe(Roster.online)
+    if Roster.preview then Roster.preview:Hide() end
+end)
 -- The game only sends the guild roster when it's asked for, and we only
 -- asked when our window opened: so a guildie's level-up (the pop-ups at 20
 -- to 60, Activity, who's online) wasn't noticed until then (Jake, 0.16.9).

@@ -1,14 +1,14 @@
--- PogRaid core: saved data, event dispatch, slash commands, API probe.
+-- DotaRaid core: saved data, event dispatch, slash commands, API probe.
 local ADDON, ns = ...
 
 ns.VERSION = "0.1.0"
 
--- Mark DotaRaid versions on the shared PogRaid channel so legacy addons
--- don't compare them with their own releases. Dev builds don't announce updates.
+-- Keep the DotaRaid marker for version discovery. Dev builds don't announce updates.
 function ns.WireVersion()
     return ns.VERSION .. (ns.DEV and "-dota-dev" or "-dota")
 end
 ns.MEDIA = "Interface\\AddOns\\" .. ADDON .. "\\Media\\"
+ns.MINIMAP_ANGLE = 260
 
 -- Page grid: every tab's page is PAGE_H tall. The Raid tab's pages (Roster,
 -- Attendance, Loot, Raid Plans) are RAID_H tall under a row of sub-tabs.
@@ -386,8 +386,8 @@ end)
 
 ns.On("ADDON_LOADED", function(name)
     if name ~= ADDON then return end
-    PogRaidDB = PogRaidDB or {}
-    local db = PogRaidDB
+    DotaRaidDB = DotaRaidDB or {}
+    local db = DotaRaidDB
     db.boards = db.boards or {}
     db.order = db.order or {}
     db.nextId = db.nextId or 0
@@ -413,7 +413,7 @@ ns.On("ADDON_LOADED", function(name)
     end
     db.settings = db.settings or {}
     local st = db.settings
-    st.minimap = st.minimap or { angle = 220 }
+    st.minimap = st.minimap or { angle = ns.MINIMAP_ANGLE }
     if st.sounds == nil then st.sounds = true end
     if st.joinPopups == nil then st.joinPopups = true end
     if st.duelChallenges == nil then st.duelChallenges = true end

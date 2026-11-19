@@ -10,7 +10,7 @@ ns.JoinPopup = Popup
 Popup.queue = {}
 
 function Popup:Build()
-    local f = CreateFrame("Frame", "PogRaidJoinPopup", UIParent)
+    local f = CreateFrame("Frame", "DotaRaidJoinPopup", UIParent)
     f:SetSize(360, 64)
     f:SetFrameStrata("DIALOG")
     f:SetPoint("TOP", 0, -140)
@@ -93,7 +93,7 @@ local function colorName(name)
 end
 
 function Toast:Build()
-    local f = CreateFrame("Button", "PogRaidGroupToast", UIParent)
+    local f = CreateFrame("Button", "DotaRaidGroupToast", UIParent)
     f:SetSize(300, 50)
     f:SetFrameStrata("DIALOG")
     f:SetClampedToScreen(true)
@@ -316,7 +316,7 @@ function Milestone:Toast(name, level)
 end
 
 function Milestone:Build()
-    local f = CreateFrame("Button", "PogRaidLevelBanner", UIParent)
+    local f = CreateFrame("Button", "DotaRaidLevelBanner", UIParent)
     f:SetSize(BANNER_W, BANNER_H)
     f:SetFrameStrata("DIALOG")
     f:SetPoint("TOP", 0, -150)

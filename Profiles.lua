@@ -1,7 +1,7 @@
 -- Pog Raid profiles: a page for every guild member, MySpace style.
 --
 -- One profile per account: status, About Me, favorites, main role, portrait,
--- color and song are kept in PogRaidDB.account and every character of the
+-- color and song are kept in DotaRaidDB.account and every character of the
 -- account shares them in its own `profile` record, with the list of the
 -- account's characters ("chars"). Two characters count as one account only
 -- when each one's record lists the other, so nobody can attach themselves to
@@ -198,7 +198,7 @@ function Profiles:Get(name)
 end
 
 ------------------------------------------------------------------------
--- Our account: PogRaidDB.account = { content, ed, chars = { [guild] = {
+-- Our account: DotaRaidDB.account = { content, ed, chars = { [guild] = {
 -- [name] = last seen } }, together }
 ------------------------------------------------------------------------
 function Profiles:Mine()

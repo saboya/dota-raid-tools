@@ -1,6 +1,6 @@
--- Pog Raid minimap button: the gnome on the minimap ring. Left-click opens
--- Pog Raid, right-click offers Settings / Hide, drag moves it around the
--- ring. Hidden buttons come back from Settings or /dota minimap. Pog Raid is
+-- DotaRaid minimap button: the gnome on the minimap ring. Left-click opens
+-- DotaRaid, right-click offers Settings / Hide, drag moves it around the
+-- ring. Hidden buttons come back from Settings or /dota minimap. DotaRaid is
 -- also in Blizzard's AddOns menu (AddonCompartmentFunc in the .toc).
 local _, ns = ...
 local UI = ns.UI
@@ -14,7 +14,7 @@ end
 
 function MinimapButton:Build()
     if self.button or not Minimap then return end
-    local b = CreateFrame("Button", "PogRaidMinimapButton", Minimap)
+    local b = CreateFrame("Button", "DotaRaidMinimapButton", Minimap)
     b:SetSize(31, 31)
     b:SetFrameStrata("MEDIUM")
     b:SetFrameLevel(8)
@@ -80,7 +80,7 @@ end
 
 -- Put the button on the ring at the saved angle (degrees, 0 = east).
 function MinimapButton:Place()
-    local a = math.rad(settings().angle or 220)
+    local a = math.rad(settings().angle or ns.MINIMAP_ANGLE)
     local r = (Minimap:GetWidth() / 2) + 5
     self.button:ClearAllPoints()
     self.button:SetPoint("CENTER", Minimap, "CENTER", math.cos(a) * r, math.sin(a) * r)
@@ -108,6 +108,6 @@ end
 ns.On("PLAYER_LOGIN", function() MinimapButton:Build() end)
 
 -- Blizzard's AddOns menu next to the minimap (see the .toc)
-function PogRaid_OnAddonCompartmentClick()
+function DotaRaid_OnAddonCompartmentClick()
     ns.Editor:Toggle()
 end

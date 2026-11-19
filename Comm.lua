@@ -1,11 +1,11 @@
--- PogRaid comms: send boards to the group in chunks, reassemble them on
+-- DotaRaid comms: send boards to the group in chunks, reassemble them on
 -- the other end, and hold outgoing messages while the client restricts
 -- addon chat (boss fights on the 12.0 API).
 --
--- Messages (prefix "PogRaid"):
+-- Messages (prefix "DotaRaid"):
 --   B<id:2><index:1><total:1><payload>   board chunk (base64 digits)
 --   X                                    close the board this sender showed
---   Q                                    "who has PogRaid?"
+--   Q                                    "who has DotaRaid?"
 --   R<version>                           reply to Q, whispered back
 --   P                                    probe ping to self
 local ADDON, ns = ...
@@ -13,7 +13,7 @@ local ADDON, ns = ...
 local Comm = {}
 ns.Comm = Comm
 
-Comm.PREFIX = "PogRaid"
+Comm.PREFIX = "DotaRaid"
 local CHUNK = 240
 local B64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 local DEC = {}
@@ -351,7 +351,7 @@ function Comm.CheckRaid()
     end)
 end
 
--- Ask every Pog Raid in the guild to answer; reports who did.
+-- Ask every DotaRaid in the guild to answer; reports who did.
 function Comm.GuildPing()
     if not IsInGuild() then
         ns.Print("sync ping: you're not in a guild")

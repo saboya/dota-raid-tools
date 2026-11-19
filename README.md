@@ -6,6 +6,10 @@ Guild and raid tools for World of Warcraft: Forever.
 
 Download `DotaRaid-v<version>.zip` from [GitHub Releases](https://github.com/saboya/dota-raid-tools/releases). Use that asset, not GitHub's automatic **Source code (zip)**. Extract it into WoW Forever's `_forever_/Interface/AddOns/` folder so that `AddOns/DotaRaid/DotaRaid.toc` exists. Restart WoW and type `/dota` or `/dotaraid`.
 
+DotaRaid and the original PogRaid use separate settings, minimap buttons, and guild messaging. Guildmates need DotaRaid to receive DotaRaid roster shares.
+
+To keep settings from a pre-release DotaRaid build, fully quit WoW, back up `WTF/Account/<account>/SavedVariables/DotaRaid.lua`, and rename its top-level `PogRaidDB =` assignment to `DotaRaidDB =` before restarting. To import original PogRaid settings into a fresh install, make a copy of `PogRaid.lua` named `DotaRaid.lua` in the same folder and edit only the copy. Do not overwrite an existing DotaRaid save.
+
 ## Publish a release
 
 1. Set the same version in `DotaRaid.toc` (`## Version`) and `Core.lua` (`ns.VERSION`). Commit and push the changes, including the workflow for the first release.

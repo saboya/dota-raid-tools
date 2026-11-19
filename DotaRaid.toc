@@ -5,9 +5,8 @@
 ## Version: 0.1.0
 ## IconTexture: Interface\AddOns\DotaRaid\Media\logo
 ## Category: Guild
-## AddonCompartmentFunc: PogRaid_OnAddonCompartmentClick
-## X-Curse-Project-ID: 1712125
-## SavedVariables: PogRaidDB
+## AddonCompartmentFunc: DotaRaid_OnAddonCompartmentClick
+## SavedVariables: DotaRaidDB
 
 Core.lua
 Bug.lua

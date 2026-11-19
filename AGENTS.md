@@ -1,6 +1,6 @@
 # Working on DotaRaid
 
-DotaRaid is the install folder and addon ID; **Dota raid tools** is the in-game title. WoW loads the Lua files and `Media/` assets directly, with no compile or dependency install step. `DotaRaid.toc` declares interface `16001`, the `PogRaidDB` SavedVariables table, and the exact Lua load order. The legacy `PogRaid` comms prefix remains unchanged for compatibility.
+DotaRaid is the install folder, addon ID, and addon-message prefix; **Dota raid tools** is the in-game title. WoW loads the Lua files and `Media/` assets directly, with no compile or dependency install step. `DotaRaid.toc` declares interface `16001`, the `DotaRaidDB` SavedVariables table, and the exact Lua load order. Keep DotaRaid globals and named frames separate from the original PogRaid addon.
 
 ## Where to make changes
 

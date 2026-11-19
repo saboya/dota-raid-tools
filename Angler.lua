@@ -893,7 +893,7 @@ end
 Angler.SHOP_ART = { open = "Interface\\Buttons\\UI-MinusButton-Up", shut = "Interface\\Buttons\\UI-PlusButton-Up" }
 
 function Angler:BuildPop()
-    local f = CreateFrame("Frame", "PogRaidAnglerPop", UIParent)
+    local f = CreateFrame("Frame", "DotaRaidAnglerPop", UIParent)
     f:SetSize(POP_W, Angler.PopHeight(true))
     f:SetFrameStrata("MEDIUM")
     f:EnableMouse(true)

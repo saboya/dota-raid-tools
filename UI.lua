@@ -1,4 +1,4 @@
--- PogRaid UI kit: flat panels, buttons, edit boxes, a popup menu and a
+-- DotaRaid UI kit: flat panels, buttons, edit boxes, a popup menu and a
 -- text prompt. Built from plain textures so nothing depends on Blizzard
 -- templates that may differ on this client.
 local _, ns = ...
@@ -1132,7 +1132,7 @@ local copy
 
 function UI.CopyBox(title, text)
     if not copy then
-        copy = CreateFrame("Frame", "PogRaidCopy", UIParent)
+        copy = CreateFrame("Frame", "DotaRaidCopy", UIParent)
         copy:SetSize(460, 340)
         copy:SetFrameStrata("FULLSCREEN_DIALOG")
         copy:SetPoint("CENTER")
@@ -1140,7 +1140,7 @@ function UI.CopyBox(title, text)
         UI.Panel(copy)
         copy.metal = UI.PortraitFrame(copy, "", ns.MEDIA .. "logo", function() copy:Hide() end)
         if not copy.metal then UI.Window(copy) end
-        tinsert(UISpecialFrames, "PogRaidCopy")
+        tinsert(UISpecialFrames, "DotaRaidCopy")
         UI.MakeMovable(copy, copy)
         if copy.metal then
             copy.title = copy.metal.title
@@ -1204,14 +1204,14 @@ local compose
 
 function UI.Compose(opts, onSubmit)
     if not compose then
-        compose = CreateFrame("Frame", "PogRaidCompose", UIParent)
+        compose = CreateFrame("Frame", "DotaRaidCompose", UIParent)
         compose:SetSize(400, 250)
         compose:SetFrameStrata("FULLSCREEN_DIALOG")
         compose:SetPoint("CENTER", 0, 80)
         compose:EnableMouse(true)
         UI.Panel(compose, { 0.05, 0.05, 0.06, 0.98 }, UI.ACCENT)
         UI.Window(compose)
-        tinsert(UISpecialFrames, "PogRaidCompose")
+        tinsert(UISpecialFrames, "DotaRaidCompose")
         UI.MakeMovable(compose, compose)
         compose.heading = UI.Text(compose, 13)
         compose.heading:SetPoint("TOPLEFT", 12, -10)

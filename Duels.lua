@@ -519,7 +519,7 @@ local Popup = {}
 ns.DuelPopup = Popup
 
 function Popup:Build()
-    local f = CreateFrame("Frame", "PogRaidDuelPopup", UIParent)
+    local f = CreateFrame("Frame", "DotaRaidDuelPopup", UIParent)
     f:SetSize(380, 64)
     f:SetFrameStrata("DIALOG")
     f:SetPoint("TOP", 0, -210)

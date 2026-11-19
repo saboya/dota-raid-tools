@@ -1,4 +1,4 @@
--- PogRaid editor: build boards on the raid map and show them to the raid.
+-- DotaRaid editor: build boards on the raid map and show them to the raid.
 --
 -- Layout (all sizes fixed so the two columns line up exactly):
 --   title bar
@@ -99,7 +99,7 @@ end
 -- Build
 ------------------------------------------------------------------------
 function Editor:Build()
-    local f = CreateFrame("Frame", "PogRaidEditor", UIParent)
+    local f = CreateFrame("Frame", "DotaRaidEditor", UIParent)
     f:SetSize(FRAME_W, ns.PAGE_H + PAGE_Y)
     f:SetFrameStrata("HIGH")
     f:SetToplevel(true)
@@ -116,7 +116,7 @@ function Editor:Build()
         self:StopDrag()
         UI.Sound("IG_CHARACTER_INFO_CLOSE")
     end)
-    tinsert(UISpecialFrames, "PogRaidEditor")
+    tinsert(UISpecialFrames, "DotaRaidEditor")
     self.frame = f
 
     -- Title band with the tabs, which start in line with the right column.

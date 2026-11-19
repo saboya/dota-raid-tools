@@ -252,7 +252,7 @@ end
 function Gear:BuildWindow()
     local D = ns.Wishlist
     local L = D.layout
-    local f = CreateFrame("Frame", "PogRaidInspect", UIParent)
+    local f = CreateFrame("Frame", "DotaRaidInspect", UIParent)
     f:SetSize(L.RW + 2 * PAD, BAND_H + PAD + L.LIST_H + PAD)
     f:SetFrameStrata("DIALOG")
     f:SetToplevel(true)
@@ -269,7 +269,7 @@ function Gear:BuildWindow()
         UI.HideMenu()
         if ns.Profiles and ns.Profiles.charCard then ns.Profiles:RefreshCharacter() end
     end)
-    tinsert(UISpecialFrames, "PogRaidInspect")
+    tinsert(UISpecialFrames, "DotaRaidInspect")
 
     local bar = CreateFrame("Frame", nil, f)
     bar:SetPoint("TOPLEFT")

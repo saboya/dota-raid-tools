@@ -451,7 +451,7 @@ local function poster(parent)
 end
 
 function Kos:Build()
-    local f = CreateFrame("Frame", "PogRaidKos", UIParent)
+    local f = CreateFrame("Frame", "DotaRaidKos", UIParent)
     f:SetSize(W, H)
     -- above the main window, as the chat window is
     f:SetFrameStrata("DIALOG")
@@ -460,7 +460,7 @@ function Kos:Build()
     UI.Panel(f)
     UI.Window(f)
     f:Hide()
-    tinsert(UISpecialFrames, "PogRaidKos")
+    tinsert(UISpecialFrames, "DotaRaidKos")
     self.frame = f
 
     local bar = CreateFrame("Frame", nil, f)

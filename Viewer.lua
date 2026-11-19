@@ -1,4 +1,4 @@
--- PogRaid viewer: the window that pops up on everyone's screen when the
+-- DotaRaid viewer: the window that pops up on everyone's screen when the
 -- raid leader shows a board. Read-only; wheel zooms, drag pans.
 local _, ns = ...
 local UI = ns.UI
@@ -25,7 +25,7 @@ local function myGroup()
 end
 
 function Viewer:Build()
-    local f = CreateFrame("Frame", "PogRaidViewer", UIParent)
+    local f = CreateFrame("Frame", "DotaRaidViewer", UIParent)
     f:SetSize(PAD + CANVAS_W + PAD, TITLE_H + CANVAS_H + PAD)
     f:SetFrameStrata("HIGH")
     f:EnableMouse(true)
@@ -33,7 +33,7 @@ function Viewer:Build()
     local metal = UI.PortraitFrame(f, "", ns.MEDIA .. "logo", function() f:Hide() end)
     if not metal then UI.Window(f) end
     f:Hide()
-    tinsert(UISpecialFrames, "PogRaidViewer")
+    tinsert(UISpecialFrames, "DotaRaidViewer")
     self.frame = f
 
     local bar = CreateFrame("Frame", nil, f)

@@ -408,7 +408,7 @@ end
 
 ------------------------------------------------------------------------
 -- Pages: one picture each, the same for everyone. "Use on" in the gallery
--- tries another in place (kept in PogRaidDB.art, this computer only).
+-- tries another in place (kept in DotaRaidDB.art, this computer only).
 ------------------------------------------------------------------------
 Art.PAGES = {
     { key = "roster", label = "Roster", default = { "Talent trees", "Priest: Holy" } },
@@ -501,7 +501,7 @@ Art.Draw = draw
 -- Window
 ------------------------------------------------------------------------
 function Art:Build()
-    local f = CreateFrame("Frame", "PogRaidArt", UIParent)
+    local f = CreateFrame("Frame", "DotaRaidArt", UIParent)
     f:SetSize(W, H)
     f:SetFrameStrata("DIALOG")
     f:SetToplevel(true)
@@ -510,7 +510,7 @@ function Art:Build()
     f.metal = UI.PortraitFrame(f, "Art gallery", ns.MEDIA .. "logo", function() f:Hide() end)
     if not f.metal then UI.Window(f) end
     f:Hide()
-    tinsert(UISpecialFrames, "PogRaidArt")
+    tinsert(UISpecialFrames, "DotaRaidArt")
     local bar = CreateFrame("Frame", nil, f)
     bar:SetPoint("TOPLEFT")
     bar:SetPoint("TOPRIGHT")

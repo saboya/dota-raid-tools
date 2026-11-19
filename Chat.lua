@@ -508,12 +508,12 @@ function Chat:Link(c, label)
         n = #self.links + 1
         self.links[n], self.linkOf[c.key] = c.key, n
     end
-    return ("|Haddon:PogRaid:chat:%d|h[%s]|h"):format(n, label)
+    return ("|Haddon:DotaRaid:chat:%d|h[%s]|h"):format(n, label)
 end
 
 -- A link was clicked in chat: if it's one of ours, open its chat. True if it was ours.
 function Chat:OnLink(link)
-    local n = type(link) == "string" and link:match("^addon:PogRaid:chat:(%d+)$")
+    local n = type(link) == "string" and link:match("^addon:DotaRaid:chat:(%d+)$")
     if not n then return false end
     local key = self.links[tonumber(n)]
     local c = key and self:Enabled() and self:Store()[key]
@@ -599,7 +599,7 @@ function Chat:Say(line)
 end
 
 function Chat:Build()
-    local f = CreateFrame("Frame", "PogRaidChat", UIParent)
+    local f = CreateFrame("Frame", "DotaRaidChat", UIParent)
     f:SetSize(W, H)
     -- a layer above the main window (HIGH, and it brings itself to the front
     -- on every click): on the same layer the chat opened behind it, so the
@@ -610,7 +610,7 @@ function Chat:Build()
     UI.Panel(f)
     UI.Window(f)
     f:Hide()
-    tinsert(UISpecialFrames, "PogRaidChat")
+    tinsert(UISpecialFrames, "DotaRaidChat")
     self.frame = f
 
     local bar = CreateFrame("Frame", nil, f)

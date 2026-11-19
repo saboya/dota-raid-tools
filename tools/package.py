@@ -13,14 +13,18 @@ VERSION_TAG = re.compile(r"v(\d+\.\d+\.\d+)")
 
 
 def package(tag, output_dir):
-    match = VERSION_TAG.fullmatch(tag)
-    if not match:
-        raise ValueError("release tag must have the form vMAJOR.MINOR.PATCH")
-    version = match[1]
     toc = TOC.read_text(encoding="utf-8")
     core = (ROOT / "Core.lua").read_text(encoding="utf-8")
     toc_version = re.search(r"^## Version:[ \t]*(\S+)[ \t]*$", toc, re.MULTILINE)
     core_version = re.search(r'^ns\.VERSION\s*=\s*"([^"]+)"', core, re.MULTILINE)
+    if tag is None:
+        if not toc_version:
+            raise ValueError(f"missing ## Version in {TOC.name}")
+        tag = f"v{toc_version[1]}"
+    match = VERSION_TAG.fullmatch(tag)
+    if not match:
+        raise ValueError("release tag must have the form vMAJOR.MINOR.PATCH")
+    version = match[1]
     if not toc_version or toc_version[1] != version:
         raise ValueError(f"{tag} does not match ## Version in {TOC.name}")
     if not core_version or core_version[1] != version:
@@ -41,7 +45,7 @@ def package(tag, output_dir):
     files.extend(media)
 
     output_dir.mkdir(parents=True, exist_ok=True)
-    archive = output_dir / f"DotaRaid-{tag}.zip"
+    archive = output_dir / f"DotaRaid-{tag}-forever.zip"
     with ZipFile(archive, "w", compression=ZIP_DEFLATED) as zipped:
         for path in dict.fromkeys(files):
             zipped.write(path, f"DotaRaid/{path.relative_to(ROOT).as_posix()}")
@@ -54,7 +58,7 @@ def package(tag, output_dir):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("tag", help="release tag, e.g. v0.1.0")
+    parser.add_argument("tag", nargs="?", help="release tag, e.g. v0.1.0 (defaults to the TOC version)")
     parser.add_argument("--output-dir", type=Path, default=Path("dist"))
     args = parser.parse_args()
     try:

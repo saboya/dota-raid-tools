@@ -4,7 +4,9 @@ Guild and raid tools for World of Warcraft: Forever.
 
 ## Install
 
-Download `DotaRaid-v<version>.zip` from [GitHub Releases](https://github.com/saboya/dota-raid-tools/releases). Use that asset, not GitHub's automatic **Source code (zip)**. Extract it into WoW Forever's `_forever_/Interface/AddOns/` folder so that `AddOns/DotaRaid/DotaRaid.toc` exists. Restart WoW and type `/dota` or `/dotaraid`.
+In WoWUp, select **WoW Forever → Get Addons → Install from URL** and paste `https://github.com/saboya/dota-raid-tools`. WoWUp looks for the published release asset ending in `-forever.zip`.
+
+To install manually, download `DotaRaid-v<version>-forever.zip` from [GitHub Releases](https://github.com/saboya/dota-raid-tools/releases). Use that asset, not GitHub's automatic **Source code (zip)**. Extract it into WoW Forever's `_forever_/Interface/AddOns/` folder so that `AddOns/DotaRaid/DotaRaid.toc` exists. Restart WoW and type `/dota` or `/dotaraid`.
 
 DotaRaid and the original PogRaid use separate settings, minimap buttons, and guild messaging. Guildmates need DotaRaid to receive DotaRaid roster shares.
 
@@ -20,4 +22,4 @@ To keep settings from a pre-release DotaRaid build, fully quit WoW, back up `WTF
    git push origin v0.1.0
    ```
 
-GitHub Actions checks that both version fields match the tag, builds the addon ZIP, and attaches it to a GitHub Release. Branch pushes alone do not publish a release. To try packaging locally without publishing, run `python3 tools/package.py v0.1.0`.
+Pushes to `master` build a ZIP and upload it as an Actions artifact for testing. Only tag pushes publish to GitHub Releases: Actions checks that both version fields match the tag and attaches the `-forever.zip` asset. To try packaging locally without publishing, run `python3 tools/package.py`.
